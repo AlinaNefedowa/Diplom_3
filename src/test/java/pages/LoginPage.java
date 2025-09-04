@@ -7,8 +7,8 @@ import org.openqa.selenium.WebDriver;
 public class LoginPage {
     private WebDriver driver;
 
-    private By emailField = By.name("email");
-    private By passwordField = By.name("password");
+    private By emailField = By.name("name");
+    private By passwordField = By.name("Пароль");
     private By loginButton = By.xpath("//button[text()='Войти']");
     private By errorMessage = By.className("input__error");
 
