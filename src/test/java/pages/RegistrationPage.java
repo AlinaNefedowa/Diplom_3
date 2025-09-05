@@ -2,6 +2,7 @@ package pages;
 
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -15,7 +16,7 @@ public class RegistrationPage {
     // Локаторы для полей формы регистрации
     public static final By NAME_FIELD = By.xpath("//label[text()='Имя']/following-sibling::input");
     public static final By EMAIL_FIELD = By.xpath("//label[text()='Email']/following-sibling::input");
-    public static final By PASSWORD_FIELD = By.xpath("//label[text()='Пароль*']/following-sibling::input");
+    public static final By PASSWORD_FIELD = By.name("Пароль");
 
     // Локаторы для кнопок и ссылок
     public static final By REGISTER_BUTTON = By.xpath("//button[text()='Зарегистрироваться']");
@@ -33,6 +34,7 @@ public class RegistrationPage {
     public void fillRegistrationForm(String name, String email, String password) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(NAME_FIELD)).sendKeys(name);
         wait.until(ExpectedConditions.visibilityOfElementLocated(EMAIL_FIELD)).sendKeys(email);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(PASSWORD_FIELD));
         wait.until(ExpectedConditions.visibilityOfElementLocated(PASSWORD_FIELD)).sendKeys(password);
     }
 
