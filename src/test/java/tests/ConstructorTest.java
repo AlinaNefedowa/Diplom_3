@@ -2,6 +2,8 @@ package tests;
 
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -28,10 +30,12 @@ public class ConstructorTest {
         constructorPage = new ConstructorPage(driver);
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка перехода к разделу 'Соусы'")
     @Description("Переход по клику на таб 'Соусы'")
     public void goToSaucesSectionTest() {
+
         step("Нажать на таб 'Соусы'");
         constructorPage.goToSauces();
 
@@ -39,10 +43,12 @@ public class ConstructorTest {
         assertTrue(constructorPage.isSaucesTitleDisplayed());
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка перехода к разделу 'Начинки'")
     @Description("Переход по клику на таб 'Начинки'")
     public void goToFillingsSectionTest() {
+
         step("Нажать на таб 'Начинки'");
         constructorPage.goToFillings();
 
@@ -50,10 +56,12 @@ public class ConstructorTest {
         assertTrue(constructorPage.isFillingsTitleDisplayed());
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка перехода к разделу 'Булки'")
     @Description("Переход по клику на таб 'Булки'")
     public void goToBunsSectionTest() {
+
         step("Нажать на таб 'Начинки' для перехода на другой раздел");
         constructorPage.goToFillings();
 
