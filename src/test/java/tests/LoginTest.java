@@ -1,101 +1,138 @@
 package tests;
 
 import api.UserApiClient;
+import io.qameta.allure.Description;
 import io.restassured.response.Response;
 import models.User;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import pages.ForgotPasswordPage;
+import org.openqa.selenium.chrome.ChromeOptions;
 import pages.LoginPage;
+import pages.MainPage;
 import pages.RegistrationPage;
 import utils.UserGenerator;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static io.qameta.allure.Allure.step;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class LoginTest {
 
     private WebDriver driver;
+    private MainPage mainPage;
     private LoginPage loginPage;
-
-    private String email;
-    private String password;
-    private String name;
+    private User user;
     private String accessToken;
 
     @BeforeAll
     public void setUp() {
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+        driver = new ChromeDriver(options);
+        driver.get("https://stellarburgers.nomoreparties.site/");
+        mainPage = new MainPage(driver);
     }
 
     @BeforeEach
-    public void createUser() {
-        User user = UserGenerator.getRandomUser();
-        email = user.getEmail();
-        password = user.getPassword();
-        name = user.getName();
-
+    public void createAndLoginUser() {
+        user = UserGenerator.getRandomUser();
         Response response = UserApiClient.createUser(user);
-        accessToken = response.then().extract().path("accessToken");
-
+        if (response.getStatusCode() == 200) {
+            accessToken = response.then().extract().path("accessToken");
+        }
+        // Переход на главную страницу перед каждым тестом
         driver.get("https://stellarburgers.nomoreparties.site/");
+    }
+
+    @Test
+    @DisplayName("Проверка входа по кнопке 'Войти в аккаунт' на главной странице")
+    @Description("Успешный вход в аккаунт с главной страницы через кнопку 'Войти в аккаунт'")
+    public void loginFromMainPageButtonTest() {
+        step("Нажать на кнопку 'Войти в аккаунт'");
+        mainPage.clickLoginButton();
+
+        step("Заполнить форму входа и нажать кнопку 'Войти'");
         loginPage = new LoginPage(driver);
+        loginPage.fillLoginForm(user.getEmail(), user.getPassword());
+        loginPage.clickLoginButton();
+
+        step("Проверить, что отображается кнопка 'Оформить заказ' на главной странице");
+        assertTrue(mainPage.isCreateOrderButtonVisible());
     }
 
     @Test
-    public void loginFromMainButton() {
-        loginPage.fillLoginForm(email, password);
-        loginPage.clickLogin();
-        assertTrue(loginPage.isCreateOrderButtonDisplayed());
+    @DisplayName("Проверка входа через кнопку 'Личный кабинет'")
+    @Description("Успешный вход в аккаунт через кнопку 'Личный кабинет' на главной странице")
+    public void loginFromPersonalAccountButtonTest() {
+        step("Нажать на кнопку 'Личный кабинет'");
+        mainPage.clickPersonalAccountButton();
+
+        step("Заполнить форму входа и нажать кнопку 'Войти'");
+        loginPage = new LoginPage(driver);
+        loginPage.fillLoginForm(user.getEmail(), user.getPassword());
+        loginPage.clickLoginButton();
+
+        step("Проверить, что отображается кнопка 'Оформить заказ' на главной странице");
+        assertTrue(mainPage.isCreateOrderButtonVisible());
     }
 
     @Test
-    public void loginFromPersonalAccountButton() {
+    @DisplayName("Проверка входа через ссылку на странице регистрации")
+    @Description("Успешный вход в аккаунт через ссылку 'Войти' на странице регистрации")
+    public void loginFromRegistrationPageLinkTest() {
+        step("Нажать на кнопку 'Войти в аккаунт' на главной странице для перехода к форме входа");
+        mainPage.clickLoginButton();
+
+        step("Перейти на страницу регистрации");
+        loginPage = new LoginPage(driver);
         RegistrationPage registrationPage = loginPage.goToRegisterPage();
-        registrationPage.fillRegistrationForm(name, email, password);
-        registrationPage.clickRegister();
 
-        loginPage = registrationPage.goToLoginPage();
-        loginPage.fillLoginForm(email, password);
-        loginPage.clickLogin();
+        step("Нажать на ссылку 'Войти' на странице регистрации");
+        registrationPage.goToLoginPage();
 
-        assertTrue(loginPage.isCreateOrderButtonDisplayed());
+        step("Заполнить форму входа и нажать кнопку 'Войти'");
+        loginPage.fillLoginForm(user.getEmail(), user.getPassword());
+        loginPage.clickLoginButton();
+
+        step("Проверить, что отображается кнопка 'Оформить заказ' на главной странице");
+        assertTrue(mainPage.isCreateOrderButtonVisible());
     }
 
     @Test
-    public void loginFromRegistrationForm() {
-        RegistrationPage registrationPage = loginPage.goToRegisterPage();
-        registrationPage.fillRegistrationForm(name, email, password);
-        registrationPage.clickRegister();
+    @DisplayName("Проверка входа через ссылку на странице восстановления пароля")
+    @Description("Успешный вход в аккаунт через ссылку 'Войти' на странице восстановления пароля")
+    public void loginFromForgotPasswordPageLinkTest() {
+        step("Нажать на кнопку 'Войти в аккаунт' на главной странице");
+        mainPage.clickLoginButton();
 
-        loginPage = registrationPage.goToLoginPage();
-        loginPage.fillLoginForm(email, password);
-        loginPage.clickLogin();
+        step("Перейти на страницу восстановления пароля");
+        loginPage = new LoginPage(driver);
+        loginPage.goToForgotPasswordPage();
 
-        assertTrue(loginPage.isCreateOrderButtonDisplayed());
-    }
+        step("Нажать на ссылку 'Войти' на странице восстановления пароля");
+        LoginPage forgotPasswordLoginPage = new LoginPage(driver);
+        forgotPasswordLoginPage.goToForgotPasswordPage();
 
-    @Test
-    public void loginFromForgotPasswordForm() {
-        ForgotPasswordPage forgotPasswordPage = loginPage.goToForgotPasswordPage();
-        forgotPasswordPage.fillEmail(email);
-        forgotPasswordPage.clickResetPassword();
+        step("Заполнить форму входа и нажать кнопку 'Войти'");
+        forgotPasswordLoginPage.fillLoginForm(user.getEmail(), user.getPassword());
+        forgotPasswordLoginPage.clickLoginButton();
 
-        loginPage = forgotPasswordPage.goToLoginPage();
-        loginPage.fillLoginForm(email, password);
-        loginPage.clickLogin();
-
-        assertTrue(loginPage.isCreateOrderButtonDisplayed());
+        step("Проверить, что отображается кнопка 'Оформить заказ' на главной странице");
+        assertTrue(mainPage.isCreateOrderButtonVisible());
     }
 
     @AfterEach
     public void deleteUser() {
-        UserApiClient.deleteUser(accessToken);
+        if (accessToken != null) {
+            UserApiClient.deleteUser(accessToken);
+        }
     }
 
     @AfterAll
     public void tearDown() {
-        driver.quit();
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }

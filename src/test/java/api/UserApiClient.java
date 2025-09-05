@@ -30,7 +30,7 @@ public class UserApiClient {
     }
 
 
-    public Response loginUser(User user) {
+    public static Response loginUser(User user) {
         return given()
                 .header("Content-type", "application/json")
                 .body(user)
