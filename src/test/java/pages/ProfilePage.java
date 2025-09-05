@@ -3,25 +3,46 @@ package pages;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
 
 public class ProfilePage {
-    private WebDriver driver;
+    private final WebDriver driver;
+    private final WebDriverWait wait;
 
-    private By logoutButton = By.xpath("//button[text()='Выйти']");
-    private By constructorLink = By.xpath("//p[text()='Конструктор']");
+    // Локаторы для страницы профиля
+    public static final By LOGOUT_BUTTON = By.xpath("//button[text()='Выйти']");
+    public static final By CONSTRUCTOR_LINK = By.xpath("//p[text()='Конструктор']");
+
+    // Локатор для заголовка профиля (чтобы проверить, что мы на нужной странице)
+    public static final By PROFILE_TITLE = By.xpath("//a[text()='Профиль']");
+
+    // Локатор для логотипа (для перехода)
+    public static final By LOGO = By.className("AppHeader_header__logo__2D0X2");
 
     public ProfilePage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    @Step("Выйти из аккаунта")
+    @Step("Нажать кнопку 'Выйти' из аккаунта")
     public void logout() {
-        driver.findElement(logoutButton).click();
+        wait.until(ExpectedConditions.elementToBeClickable(LOGOUT_BUTTON)).click();
     }
 
-    @Step("Перейти в Конструктор")
+    @Step("Нажать на 'Конструктор' для перехода")
     public void goToConstructor() {
-        driver.findElement(constructorLink).click();
+        wait.until(ExpectedConditions.elementToBeClickable(CONSTRUCTOR_LINK)).click();
+    }
+
+    @Step("Нажать на логотип для перехода на главную страницу")
+    public void goToMainPageByLogo() {
+        wait.until(ExpectedConditions.elementToBeClickable(LOGO)).click();
+    }
+
+    @Step("Проверить, что страница профиля загрузилась")
+    public boolean isProfileTitleDisplayed() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(PROFILE_TITLE)).isDisplayed();
     }
 }
-
