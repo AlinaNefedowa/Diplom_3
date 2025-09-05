@@ -5,6 +5,8 @@ import io.qameta.allure.Description;
 import io.restassured.response.Response;
 import models.User;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -60,7 +62,8 @@ public class NavigationTest {
         assertTrue(mainPage.isCreateOrderButtonVisible());
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка перехода в личный кабинет")
     @Description("Переход в личный кабинет по клику на кнопку 'Личный кабинет'")
     public void goToPersonalAccountTest() {
@@ -72,7 +75,8 @@ public class NavigationTest {
         assertTrue(profilePage.isProfileTitleDisplayed());
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка перехода из личного кабинета в конструктор")
     @Description("Переход на страницу конструктора по клику на кнопку 'Конструктор' в личном кабинете")
     public void goToConstructorFromProfileTest() {
@@ -87,7 +91,8 @@ public class NavigationTest {
         assertTrue(mainPage.isCreateOrderButtonVisible());
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка перехода из личного кабинета на главную по логотипу")
     @Description("Переход на главную страницу по клику на логотип Stellar Burgers")
     public void goToMainPageFromProfileByLogoTest() {
@@ -102,7 +107,8 @@ public class NavigationTest {
         assertTrue(mainPage.isCreateOrderButtonVisible());
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка выхода из аккаунта")
     @Description("Выход из аккаунта по кнопке 'Выйти' на странице личного кабинета")
     public void logoutTest() {

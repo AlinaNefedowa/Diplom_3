@@ -5,6 +5,8 @@ import io.qameta.allure.Description;
 import io.restassured.response.Response;
 import models.User;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -46,7 +48,8 @@ public class LoginTest {
         driver.get("https://stellarburgers.nomoreparties.site/");
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка входа по кнопке 'Войти в аккаунт' на главной странице")
     @Description("Успешный вход в аккаунт с главной страницы через кнопку 'Войти в аккаунт'")
     public void loginFromMainPageButtonTest() {
@@ -62,7 +65,8 @@ public class LoginTest {
         assertTrue(mainPage.isCreateOrderButtonVisible());
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка входа через кнопку 'Личный кабинет'")
     @Description("Успешный вход в аккаунт через кнопку 'Личный кабинет' на главной странице")
     public void loginFromPersonalAccountButtonTest() {
@@ -78,7 +82,8 @@ public class LoginTest {
         assertTrue(mainPage.isCreateOrderButtonVisible());
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка входа через ссылку на странице регистрации")
     @Description("Успешный вход в аккаунт через ссылку 'Войти' на странице регистрации")
     public void loginFromRegistrationPageLinkTest() {
@@ -100,7 +105,8 @@ public class LoginTest {
         assertTrue(mainPage.isCreateOrderButtonVisible());
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка входа через ссылку на странице восстановления пароля")
     @Description("Успешный вход в аккаунт через ссылку 'Войти' на странице восстановления пароля")
     public void loginFromForgotPasswordPageLinkTest() {

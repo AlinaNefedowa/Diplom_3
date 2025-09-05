@@ -5,6 +5,8 @@ import io.qameta.allure.Description;
 import io.restassured.response.Response;
 import models.User;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -45,7 +47,8 @@ public class RegistrationTest {
         registrationPage = new RegistrationPage(driver);
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка успешной регистрации")
     @Description("Регистрация нового пользователя с валидными данными")
     public void successfulRegistrationTest() {
@@ -61,7 +64,8 @@ public class RegistrationTest {
         assertTrue(loginPage.isLoginFormTitleDisplayed());
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка регистрации с некорректным паролем")
     @Description("Попытка регистрации с паролем менее шести символов. Ожидается ошибка.")
     public void registrationWithInvalidPasswordTest() {
