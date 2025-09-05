@@ -14,7 +14,7 @@ public class MainPage {
 
     // Локаторы для кнопок и ссылок на главной странице
     public static final By LOGIN_BUTTON = By.xpath("//button[text()='Войти в аккаунт']");
-    public static final By PERSONAL_ACCOUNT_BUTTON = By.xpath("//a[text()='Личный кабинет']");
+    public static final By PERSONAL_ACCOUNT_BUTTON = By.xpath("//a/p[text()='Личный Кабинет']");
     public static final By CONSTRUCTOR_LINK = By.xpath("//p[text()='Конструктор']");
     public static final By LOGO = By.className("AppHeader_header__logo__2D0X2");
     public static final By CREATE_ORDER_BUTTON = By.xpath("//button[text()='Оформить заказ']");

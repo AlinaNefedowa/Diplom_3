@@ -8,6 +8,7 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import pages.ForgotPasswordPage;
 import pages.LoginPage;
 import pages.MainPage;
 import pages.RegistrationPage;
@@ -107,16 +108,15 @@ public class LoginTest {
         mainPage.clickLoginButton();
 
         step("Перейти на страницу восстановления пароля");
-        loginPage = new LoginPage(driver);
-        loginPage.goToForgotPasswordPage();
+        LoginPage loginPage = new LoginPage(driver);
+        ForgotPasswordPage forgotPasswordPage = loginPage.goToForgotPasswordPage();
 
         step("Нажать на ссылку 'Войти' на странице восстановления пароля");
-        LoginPage forgotPasswordLoginPage = new LoginPage(driver);
-        forgotPasswordLoginPage.goToForgotPasswordPage();
+        forgotPasswordPage.goToLoginPage();
 
         step("Заполнить форму входа и нажать кнопку 'Войти'");
-        forgotPasswordLoginPage.fillLoginForm(user.getEmail(), user.getPassword());
-        forgotPasswordLoginPage.clickLoginButton();
+        loginPage.fillLoginForm(user.getEmail(), user.getPassword());
+        loginPage.clickLoginButton();
 
         step("Проверить, что отображается кнопка 'Оформить заказ' на главной странице");
         assertTrue(mainPage.isCreateOrderButtonVisible());
