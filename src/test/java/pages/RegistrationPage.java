@@ -3,34 +3,57 @@ package pages;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class RegistrationPage {
-    private WebDriver driver;
+    private final WebDriver driver;
+    private final WebDriverWait wait;
 
-    private By nameField = By.name("name");
-    private By emailField = By.name("email");
-    private By passwordField = By.name("password");
-    private By registerButton = By.xpath("//button[text()='Зарегистрироваться']");
-    private By errorMessage = By.className("input__error");
+    // Локаторы для полей формы регистрации
+    public static final By NAME_FIELD = By.xpath("//label[text()='Имя']/following-sibling::input");
+    public static final By EMAIL_FIELD = By.xpath("//label[text()='Email']/following-sibling::input");
+    public static final By PASSWORD_FIELD = By.xpath("//label[text()='Пароль*']/following-sibling::input");
+
+    // Локаторы для кнопок и ссылок
+    public static final By REGISTER_BUTTON = By.xpath("//button[text()='Зарегистрироваться']");
+    public static final By LOGIN_LINK = By.linkText("Войти"); // Ссылка "Войти" на странице регистрации
+
+    // Локатор для сообщения об ошибке
+    public static final By ERROR_MESSAGE = By.className("input__error");
 
     public RegistrationPage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    @Step("Заполнить форму регистрации")
+    @Step("Ввести данные пользователя: имя, email, пароль")
     public void fillRegistrationForm(String name, String email, String password) {
-        driver.findElement(nameField).sendKeys(name);
-        driver.findElement(emailField).sendKeys(email);
-        driver.findElement(passwordField).sendKeys(password);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(NAME_FIELD)).sendKeys(name);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(EMAIL_FIELD)).sendKeys(email);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(PASSWORD_FIELD)).sendKeys(password);
     }
 
-    @Step("Нажать 'Зарегистрироваться'")
-    public void clickRegister() {
-        driver.findElement(registerButton).click();
+    @Step("Нажать кнопку 'Зарегистрироваться'")
+    public void clickRegisterButton() {
+        wait.until(ExpectedConditions.elementToBeClickable(REGISTER_BUTTON)).click();
     }
 
-    @Step("Получить текст ошибки")
+    @Step("Перейти на страницу логина")
+    public LoginPage goToLoginPage() {
+        wait.until(ExpectedConditions.elementToBeClickable(LOGIN_LINK)).click();
+        return new LoginPage(driver);
+    }
+
+    @Step("Получить текст сообщения об ошибке")
     public String getErrorText() {
-        return driver.findElement(errorMessage).getText();
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(ERROR_MESSAGE)).getText();
+    }
+
+    @Step("Проверить, что поле email отображается")
+    public boolean isEmailFieldDisplayed() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(EMAIL_FIELD)).isDisplayed();
     }
 }
