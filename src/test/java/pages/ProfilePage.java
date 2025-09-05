@@ -12,7 +12,7 @@ public class ProfilePage {
     private final WebDriverWait wait;
 
     // Локаторы для страницы профиля
-    public static final By LOGOUT_BUTTON = By.xpath("//button[text()='Выйти']");
+    public static final By LOGOUT_BUTTON = By.xpath("//button[text()='Выход']");
     public static final By CONSTRUCTOR_LINK = By.xpath("//p[text()='Конструктор']");
 
     // Локатор для заголовка профиля (чтобы проверить, что мы на нужной странице)

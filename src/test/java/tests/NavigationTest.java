@@ -5,13 +5,18 @@ import io.qameta.allure.Description;
 import io.restassured.response.Response;
 import models.User;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.MainPage;
 import pages.LoginPage;
 import pages.ProfilePage;
 import utils.UserGenerator;
+
+import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static io.qameta.allure.Allure.step;
@@ -109,7 +114,10 @@ public class NavigationTest {
         profilePage.logout();
 
         step("Проверить, что кнопка 'Войти в аккаунт' отображается на главной странице");
-        assertTrue(driver.findElement(MainPage.LOGIN_BUTTON).isDisplayed());
+        // Используем WebDriverWait для явного ожидания видимости элемента
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(MainPage.LOGIN_BUTTON_AFTER_LOGOUT));
+
     }
 
     @AfterEach
