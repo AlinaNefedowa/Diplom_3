@@ -1,19 +1,23 @@
+// src/test/java/tests/LoginTest.java
 package tests;
 
 import api.UserApiClient;
 import io.qameta.allure.Description;
 import io.restassured.response.Response;
 import models.User;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import pages.ForgotPasswordPage;
 import pages.LoginPage;
 import pages.MainPage;
 import pages.RegistrationPage;
+import utils.BrowserManager; // Импортируем BrowserManager
 import utils.UserGenerator;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -30,29 +34,37 @@ public class LoginTest {
 
     @BeforeAll
     public void setUp() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
-        driver = new ChromeDriver(options);
+        // Инициализация драйвера теперь будет происходить в каждом параметризованном тесте,
+        // чтобы обеспечить независимость тестов и возможность запускать их для разных браузеров.
+    }
+
+    @BeforeEach
+    public void setupTestEnvironment() {
+        // Этот метод будет вызываться перед каждым параметризованным тестом.
+        // Здесь будет происходить инициализация драйвера и базовых страниц.
+    }
+
+    private void initializeDriverAndPages(String browserName) {
+        driver = BrowserManager.getDriver(browserName);
+        driver.manage().timeouts().implicitlyWait(java.time.Duration.ofSeconds(5));
+        driver.manage().window().maximize();
         driver.get("https://stellarburgers.nomoreparties.site/");
         mainPage = new MainPage(driver);
     }
 
-    @BeforeEach
-    public void createAndLoginUser() {
-        user = UserGenerator.getRandomUser();
-        Response response = UserApiClient.createUser(user);
-        if (response.getStatusCode() == 200) {
-            accessToken = response.then().extract().path("accessToken");
-        }
-        // Переход на главную страницу перед каждым тестом
-        driver.get("https://stellarburgers.nomoreparties.site/");
+    private void cleanupDriver() {
+        BrowserManager.quitDriver(driver);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка входа по кнопке 'Войти в аккаунт' на главной странице")
     @Description("Успешный вход в аккаунт с главной страницы через кнопку 'Войти в аккаунт'")
-    public void loginFromMainPageButtonTest() {
+    public void loginFromMainPageButtonTest(String browserName) {
+        initializeDriverAndPages(browserName);
+        user = UserGenerator.getRandomUser();
+        UserApiClient.createUser(user); // Создаем пользователя для теста
+
         step("Нажать на кнопку 'Войти в аккаунт'");
         mainPage.clickLoginButton();
 
@@ -63,13 +75,19 @@ public class LoginTest {
 
         step("Проверить, что отображается кнопка 'Оформить заказ' на главной странице");
         assertTrue(mainPage.isCreateOrderButtonVisible());
+
+        cleanupDriver();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка входа через кнопку 'Личный кабинет'")
     @Description("Успешный вход в аккаунт через кнопку 'Личный кабинет' на главной странице")
-    public void loginFromPersonalAccountButtonTest() {
+    public void loginFromPersonalAccountButtonTest(String browserName) {
+        initializeDriverAndPages(browserName);
+        user = UserGenerator.getRandomUser();
+        UserApiClient.createUser(user); // Создаем пользователя для теста
+
         step("Нажать на кнопку 'Личный кабинет'");
         mainPage.clickPersonalAccountButton();
 
@@ -80,13 +98,19 @@ public class LoginTest {
 
         step("Проверить, что отображается кнопка 'Оформить заказ' на главной странице");
         assertTrue(mainPage.isCreateOrderButtonVisible());
+
+        cleanupDriver();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка входа через ссылку на странице регистрации")
     @Description("Успешный вход в аккаунт через ссылку 'Войти' на странице регистрации")
-    public void loginFromRegistrationPageLinkTest() {
+    public void loginFromRegistrationPageLinkTest(String browserName) {
+        initializeDriverAndPages(browserName);
+        user = UserGenerator.getRandomUser();
+        UserApiClient.createUser(user); // Создаем пользователя для теста
+
         step("Нажать на кнопку 'Войти в аккаунт' на главной странице для перехода к форме входа");
         mainPage.clickLoginButton();
 
@@ -103,13 +127,19 @@ public class LoginTest {
 
         step("Проверить, что отображается кнопка 'Оформить заказ' на главной странице");
         assertTrue(mainPage.isCreateOrderButtonVisible());
+
+        cleanupDriver();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка входа через ссылку на странице восстановления пароля")
     @Description("Успешный вход в аккаунт через ссылку 'Войти' на странице восстановления пароля")
-    public void loginFromForgotPasswordPageLinkTest() {
+    public void loginFromForgotPasswordPageLinkTest(String browserName) {
+        initializeDriverAndPages(browserName);
+        user = UserGenerator.getRandomUser();
+        UserApiClient.createUser(user); // Создаем пользователя для теста
+
         step("Нажать на кнопку 'Войти в аккаунт' на главной странице");
         mainPage.clickLoginButton();
 
@@ -126,19 +156,16 @@ public class LoginTest {
 
         step("Проверить, что отображается кнопка 'Оформить заказ' на главной странице");
         assertTrue(mainPage.isCreateOrderButtonVisible());
+
+        cleanupDriver();
     }
 
     @AfterEach
-    public void deleteUser() {
+    public void deleteUserAndCleanup() {
         if (accessToken != null) {
             UserApiClient.deleteUser(accessToken);
         }
-    }
-
-    @AfterAll
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
+        user = null; // Обнуляем пользователя после теста
+        accessToken = null; // Обнуляем токен
     }
 }

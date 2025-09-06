@@ -9,18 +9,17 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import pages.MainPage;
 import pages.LoginPage;
+import pages.MainPage;
 import pages.ProfilePage;
+import utils.BrowserManager;
 import utils.UserGenerator;
 
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static io.qameta.allure.Allure.step;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -33,13 +32,9 @@ public class NavigationTest {
     private User user;
     private String accessToken;
 
-    @BeforeAll
-    public void setUp() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
-        driver = new ChromeDriver(options);
-        driver.get("https://stellarburgers.nomoreparties.site/");
-        mainPage = new MainPage(driver);
+    @AfterAll
+    public void tearDown() {
+        BrowserManager.quitDriver(driver);
     }
 
     @BeforeEach
@@ -50,36 +45,32 @@ public class NavigationTest {
         if (response.getStatusCode() == 200) {
             accessToken = response.then().extract().path("accessToken");
         }
-
-        step("Войти в аккаунт через UI");
-        driver.get("https://stellarburgers.nomoreparties.site/");
-        mainPage.clickPersonalAccountButton();
-        loginPage = new LoginPage(driver);
-        loginPage.fillLoginForm(user.getEmail(), user.getPassword());
-        loginPage.clickLoginButton();
-
-        step("Проверить, что вход успешен");
-        assertTrue(mainPage.isCreateOrderButtonVisible());
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка перехода в личный кабинет")
     @Description("Переход в личный кабинет по клику на кнопку 'Личный кабинет'")
-    public void goToPersonalAccountTest() {
+    public void goToPersonalAccountTest(String browserName) {
+        setupTest(browserName);
+
         step("Нажать на кнопку 'Личный кабинет'");
         mainPage.clickPersonalAccountButton();
         profilePage = new ProfilePage(driver);
 
         step("Проверить, что страница профиля загрузилась");
         assertTrue(profilePage.isProfileTitleDisplayed());
+
+        teardownTest();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка перехода из личного кабинета в конструктор")
     @Description("Переход на страницу конструктора по клику на кнопку 'Конструктор' в личном кабинете")
-    public void goToConstructorFromProfileTest() {
+    public void goToConstructorFromProfileTest(String browserName) {
+        setupTest(browserName);
+
         step("Перейти в личный кабинет");
         mainPage.clickPersonalAccountButton();
         profilePage = new ProfilePage(driver);
@@ -89,13 +80,17 @@ public class NavigationTest {
 
         step("Проверить, что страница конструктора загрузилась");
         assertTrue(mainPage.isCreateOrderButtonVisible());
+
+        teardownTest();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка перехода из личного кабинета на главную по логотипу")
     @Description("Переход на главную страницу по клику на логотип Stellar Burgers")
-    public void goToMainPageFromProfileByLogoTest() {
+    public void goToMainPageFromProfileByLogoTest(String browserName) {
+        setupTest(browserName);
+
         step("Перейти в личный кабинет");
         mainPage.clickPersonalAccountButton();
         profilePage = new ProfilePage(driver);
@@ -105,13 +100,17 @@ public class NavigationTest {
 
         step("Проверить, что страница конструктора загрузилась");
         assertTrue(mainPage.isCreateOrderButtonVisible());
+
+        teardownTest();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка выхода из аккаунта")
     @Description("Выход из аккаунта по кнопке 'Выйти' на странице личного кабинета")
-    public void logoutTest() {
+    public void logoutTest(String browserName) {
+        setupTest(browserName);
+
         step("Перейти в личный кабинет");
         mainPage.clickPersonalAccountButton();
         profilePage = new ProfilePage(driver);
@@ -120,10 +119,10 @@ public class NavigationTest {
         profilePage.logout();
 
         step("Проверить, что кнопка 'Войти в аккаунт' отображается на главной странице");
-        // Используем WebDriverWait для явного ожидания видимости элемента
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.visibilityOfElementLocated(MainPage.LOGIN_BUTTON_AFTER_LOGOUT));
 
+        teardownTest();
     }
 
     @AfterEach
@@ -133,10 +132,24 @@ public class NavigationTest {
         }
     }
 
-    @AfterAll
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
+    private void setupTest(String browserName) {
+        driver = BrowserManager.getDriver(browserName);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.manage().window().maximize();
+        driver.get("https://stellarburgers.nomoreparties.site/");
+        mainPage = new MainPage(driver);
+
+        step("Войти в аккаунт через UI");
+        mainPage.clickPersonalAccountButton();
+        loginPage = new LoginPage(driver);
+        loginPage.fillLoginForm(user.getEmail(), user.getPassword());
+        loginPage.clickLoginButton();
+
+        step("Проверить, что вход успешен");
+        assertTrue(mainPage.isCreateOrderButtonVisible());
+    }
+
+    private void teardownTest() {
+        BrowserManager.quitDriver(driver);
     }
 }

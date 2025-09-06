@@ -1,14 +1,17 @@
 package tests;
 
 import io.qameta.allure.Description;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import pages.ConstructorPage;
 import pages.MainPage;
+import utils.BrowserManager;
+
+import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static io.qameta.allure.Allure.step;
@@ -20,47 +23,44 @@ public class ConstructorTest {
     private MainPage mainPage;
     private ConstructorPage constructorPage;
 
-    @BeforeAll
-    public void setUp() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
-        driver = new ChromeDriver(options);
-        driver.get("https://stellarburgers.nomoreparties.site/");
-        mainPage = new MainPage(driver);
-        constructorPage = new ConstructorPage(driver);
-    }
-
     @ParameterizedTest
     @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка перехода к разделу 'Соусы'")
     @Description("Переход по клику на таб 'Соусы'")
-    public void goToSaucesSectionTest() {
+    public void goToSaucesSectionTest(String browserName) {
+        setupTest(browserName);
 
         step("Нажать на таб 'Соусы'");
         constructorPage.goToSauces();
 
         step("Проверить, что заголовок 'Соусы' отображается");
         assertTrue(constructorPage.isSaucesTitleDisplayed());
+
+        teardownTest();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка перехода к разделу 'Начинки'")
     @Description("Переход по клику на таб 'Начинки'")
-    public void goToFillingsSectionTest() {
+    public void goToFillingsSectionTest(String browserName) {
+        setupTest(browserName);
 
         step("Нажать на таб 'Начинки'");
         constructorPage.goToFillings();
 
         step("Проверить, что заголовок 'Начинки' отображается");
         assertTrue(constructorPage.isFillingsTitleDisplayed());
+
+        teardownTest();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"chrome", "yandex"})
     @DisplayName("Проверка перехода к разделу 'Булки'")
     @Description("Переход по клику на таб 'Булки'")
-    public void goToBunsSectionTest() {
+    public void goToBunsSectionTest(String browserName) {
+        setupTest(browserName);
 
         step("Нажать на таб 'Начинки' для перехода на другой раздел");
         constructorPage.goToFillings();
@@ -70,12 +70,20 @@ public class ConstructorTest {
 
         step("Проверить, что заголовок 'Булки' отображается");
         assertTrue(constructorPage.isBunsTitleDisplayed());
+
+        teardownTest();
     }
 
-    @AfterAll
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
+    private void setupTest(String browserName) {
+        driver = BrowserManager.getDriver(browserName);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.manage().window().maximize();
+        driver.get("https://stellarburgers.nomoreparties.site/");
+        mainPage = new MainPage(driver);
+        constructorPage = new ConstructorPage(driver);
+    }
+
+    private void teardownTest() {
+        BrowserManager.quitDriver(driver);
     }
 }
