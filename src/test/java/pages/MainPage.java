@@ -12,7 +12,6 @@ public class MainPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    // Локаторы для кнопок и ссылок на главной странице
     public static final By LOGIN_BUTTON = By.xpath("//button[text()='Войти в аккаунт']");
     public static final By LOGIN_BUTTON_AFTER_LOGOUT = By.xpath("//button[text()='Войти']");
     public static final By PERSONAL_ACCOUNT_BUTTON = By.xpath("//a/p[text()='Личный Кабинет']");
@@ -20,12 +19,10 @@ public class MainPage {
     public static final By LOGO = By.className("AppHeader_header__logo__2D0X2");
     public static final By CREATE_ORDER_BUTTON = By.xpath("//button[text()='Оформить заказ']");
 
-    // Локаторы для разделов конструктора
     public static final By BUNS_SECTION = By.xpath("//span[text()='Булки']");
     public static final By SAUCES_SECTION = By.xpath("//span[text()='Соусы']");
     public static final By FILLINGS_SECTION = By.xpath("//span[text()='Начинки']");
 
-    // Локатор для заголовка раздела "Булки" (для проверки перехода)
     public static final By BUNS_TITLE = By.xpath("//h2[text()='Булки']");
 
     public MainPage(WebDriver driver) {

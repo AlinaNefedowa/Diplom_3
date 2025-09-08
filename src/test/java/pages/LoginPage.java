@@ -12,19 +12,15 @@ public class LoginPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    // Локаторы для полей формы входа
     public static final By EMAIL_FIELD = By.name("name");
     public static final By PASSWORD_FIELD = By.name("Пароль");
 
-    // Локаторы для кнопок и ссылок
     public static final By LOGIN_BUTTON = By.xpath("//button[text()='Войти']");
     public static final By FORGOT_PASSWORD_LINK = By.linkText("Восстановить пароль");
     public static final By REGISTER_LINK = By.linkText("Зарегистрироваться");
 
-    // Локатор для заголовка формы входа
     public static final By LOGIN_FORM_TITLE = By.xpath("//h2[text()='Вход']");
 
-    // Локатор для сообщения об ошибке
     public static final By ERROR_MESSAGE = By.className("input__error");
 
     public LoginPage(WebDriver driver) {

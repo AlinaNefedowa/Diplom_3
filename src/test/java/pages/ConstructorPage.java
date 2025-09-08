@@ -11,12 +11,10 @@ public class ConstructorPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    // Локаторы для табов "Конструктора"
     public static final By BUNS_TAB = By.xpath("//span[text()='Булки']");
     public static final By SAUCES_TAB = By.xpath("//span[text()='Соусы']");
     public static final By FILLINGS_TAB = By.xpath("//span[text()='Начинки']");
 
-    // Локаторы для заголовков разделов, чтобы проверить переход
     public static final By BUNS_TITLE = By.xpath("//h2[text()='Булки']");
     public static final By SAUCES_TITLE = By.xpath("//h2[text()='Соусы']");
     public static final By FILLINGS_TITLE = By.xpath("//h2[text()='Начинки']");

@@ -1,9 +1,7 @@
-// src/test/java/tests/LoginTest.java
 package tests;
 
 import api.UserApiClient;
 import io.qameta.allure.Description;
-import io.restassured.response.Response;
 import models.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,7 +15,6 @@ import pages.ForgotPasswordPage;
 import pages.LoginPage;
 import pages.MainPage;
 import pages.RegistrationPage;
-import utils.BrowserManager; // Импортируем BrowserManager
 import utils.UserGenerator;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -34,14 +31,10 @@ public class LoginTest {
 
     @BeforeAll
     public void setUp() {
-        // Инициализация драйвера теперь будет происходить в каждом параметризованном тесте,
-        // чтобы обеспечить независимость тестов и возможность запускать их для разных браузеров.
     }
 
     @BeforeEach
     public void setupTestEnvironment() {
-        // Этот метод будет вызываться перед каждым параметризованным тестом.
-        // Здесь будет происходить инициализация драйвера и базовых страниц.
     }
 
     private void initializeDriverAndPages(String browserName) {
@@ -63,7 +56,7 @@ public class LoginTest {
     public void loginFromMainPageButtonTest(String browserName) {
         initializeDriverAndPages(browserName);
         user = UserGenerator.getRandomUser();
-        UserApiClient.createUser(user); // Создаем пользователя для теста
+        UserApiClient.createUser(user);
 
         step("Нажать на кнопку 'Войти в аккаунт'");
         mainPage.clickLoginButton();
@@ -86,7 +79,7 @@ public class LoginTest {
     public void loginFromPersonalAccountButtonTest(String browserName) {
         initializeDriverAndPages(browserName);
         user = UserGenerator.getRandomUser();
-        UserApiClient.createUser(user); // Создаем пользователя для теста
+        UserApiClient.createUser(user);
 
         step("Нажать на кнопку 'Личный кабинет'");
         mainPage.clickPersonalAccountButton();
@@ -109,7 +102,7 @@ public class LoginTest {
     public void loginFromRegistrationPageLinkTest(String browserName) {
         initializeDriverAndPages(browserName);
         user = UserGenerator.getRandomUser();
-        UserApiClient.createUser(user); // Создаем пользователя для теста
+        UserApiClient.createUser(user);
 
         step("Нажать на кнопку 'Войти в аккаунт' на главной странице для перехода к форме входа");
         mainPage.clickLoginButton();
@@ -138,7 +131,7 @@ public class LoginTest {
     public void loginFromForgotPasswordPageLinkTest(String browserName) {
         initializeDriverAndPages(browserName);
         user = UserGenerator.getRandomUser();
-        UserApiClient.createUser(user); // Создаем пользователя для теста
+        UserApiClient.createUser(user);
 
         step("Нажать на кнопку 'Войти в аккаунт' на главной странице");
         mainPage.clickLoginButton();
@@ -165,7 +158,7 @@ public class LoginTest {
         if (accessToken != null) {
             UserApiClient.deleteUser(accessToken);
         }
-        user = null; // Обнуляем пользователя после теста
-        accessToken = null; // Обнуляем токен
+        user = null;
+        accessToken = null;
     }
 }

@@ -1,15 +1,12 @@
 package tests;
 
 import io.qameta.allure.Description;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
 import pages.ConstructorPage;
-import pages.MainPage;
-import utils.BrowserManager;
 
 import java.time.Duration;
 
@@ -20,7 +17,6 @@ import static io.qameta.allure.Allure.step;
 public class ConstructorTest {
 
     private WebDriver driver;
-    private MainPage mainPage;
     private ConstructorPage constructorPage;
 
     @ParameterizedTest
@@ -79,7 +75,6 @@ public class ConstructorTest {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.manage().window().maximize();
         driver.get("https://stellarburgers.nomoreparties.site/");
-        mainPage = new MainPage(driver);
         constructorPage = new ConstructorPage(driver);
     }
 

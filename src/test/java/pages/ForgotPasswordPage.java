@@ -12,7 +12,6 @@ public class ForgotPasswordPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    // Поле и кнопки
     public static final By EMAIL_FIELD = By.name("name");
     public static final By RESET_PASSWORD_BUTTON = By.xpath("//button[text()='Восстановить']");
     public static final By LOGIN_LINK = By.linkText("Войти");
