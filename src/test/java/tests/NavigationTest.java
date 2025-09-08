@@ -14,7 +14,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.LoginPage;
 import pages.MainPage;
 import pages.ProfilePage;
-import utils.BrowserManager;
 import utils.UserGenerator;
 
 import java.time.Duration;

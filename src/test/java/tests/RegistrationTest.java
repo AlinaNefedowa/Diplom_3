@@ -14,7 +14,6 @@ import org.openqa.selenium.WebDriver;
 import pages.LoginPage;
 import pages.MainPage;
 import pages.RegistrationPage;
-import utils.BrowserManager;
 import utils.UserGenerator;
 
 import java.time.Duration;
@@ -82,7 +81,6 @@ public class RegistrationTest {
         Allure.step("Starting test for browser: " + browserName);
         step("Нажать на кнопку 'Личный кабинет'");
         mainPage.clickPersonalAccountButton();
-        // ... остальной код теста остается без изменений ...
 
         step("Перейти на страницу регистрации");
         LoginPage loginPage = new LoginPage(driver);

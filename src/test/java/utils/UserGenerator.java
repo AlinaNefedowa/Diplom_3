@@ -13,7 +13,6 @@ public class UserGenerator {
 
     public static User getNewUserWithInvalidPassword() {
         String uniqueEmail = "test_" + UUID.randomUUID() + "@yandex.ru";
-        // The password "123" is less than six characters long
         return new User(uniqueEmail, "123", "ShortPassUser");
     }
 }

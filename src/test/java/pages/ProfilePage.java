@@ -11,14 +11,11 @@ public class ProfilePage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    // Локаторы для страницы профиля
     public static final By LOGOUT_BUTTON = By.xpath("//button[text()='Выход']");
     public static final By CONSTRUCTOR_LINK = By.xpath("//p[text()='Конструктор']");
 
-    // Локатор для заголовка профиля (чтобы проверить, что мы на нужной странице)
     public static final By PROFILE_TITLE = By.xpath("//a[text()='Профиль']");
 
-    // Локатор для логотипа (для перехода)
     public static final By LOGO = By.className("AppHeader_header__logo__2D0X2");
 
     public ProfilePage(WebDriver driver) {
