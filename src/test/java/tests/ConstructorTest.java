@@ -14,6 +14,7 @@ import utils.BrowserManager;
 
 import java.time.Duration;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static io.qameta.allure.Allure.step;
 
@@ -43,11 +44,15 @@ public class ConstructorTest {
     @DisplayName("Проверка перехода к разделу 'Соусы'")
     @Description("Переход по клику на таб 'Соусы'")
     public void goToSaucesSectionTest(String browserName) {
+        step("Нажать на таб 'Начинки'");
+        constructorPage.goToFillings();
+
         step("Нажать на таб 'Соусы'");
         constructorPage.goToSauces();
 
         step("Проверить, что заголовок 'Соусы' отображается");
         assertTrue(constructorPage.isSaucesTitleDisplayed());
+
     }
 
     @ParameterizedTest
@@ -55,6 +60,9 @@ public class ConstructorTest {
     @DisplayName("Проверка перехода к разделу 'Начинки'")
     @Description("Переход по клику на таб 'Начинки'")
     public void goToFillingsSectionTest(String browserName) {
+        step("Проверить, что заголовок 'Булки' отображается по умолчанию");
+        assertTrue(constructorPage.isBunsTitleDisplayed());
+
         step("Нажать на таб 'Начинки'");
         constructorPage.goToFillings();
 
