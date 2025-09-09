@@ -14,7 +14,6 @@ import utils.BrowserManager;
 
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static io.qameta.allure.Allure.step;
 

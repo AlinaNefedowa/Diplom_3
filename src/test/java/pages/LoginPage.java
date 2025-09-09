@@ -21,7 +21,6 @@ public class LoginPage {
 
     public static final By LOGIN_FORM_TITLE = By.xpath("//h2[text()='Вход']");
 
-    public static final By ERROR_MESSAGE = By.className("input__error");
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
@@ -40,15 +39,6 @@ public class LoginPage {
         wait.until(ExpectedConditions.elementToBeClickable(LOGIN_BUTTON)).click();
     }
 
-    @Step("Проверить, что отображается сообщение об ошибке")
-    public boolean isErrorMessageDisplayed() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(ERROR_MESSAGE)).isDisplayed();
-    }
-
-    @Step("Получить текст ошибки")
-    public String getErrorText() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(ERROR_MESSAGE)).getText();
-    }
 
     @Step("Перейти на страницу восстановления пароля")
     public ForgotPasswordPage goToForgotPasswordPage() {
