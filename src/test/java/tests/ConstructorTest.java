@@ -43,15 +43,20 @@ public class ConstructorTest {
     @DisplayName("Проверка перехода к разделу 'Соусы'")
     @Description("Переход по клику на таб 'Соусы'")
     public void goToSaucesSectionTest(String browserName) {
+
+        step("По умолчанию активен таб 'Булки'");
+        assertTrue(constructorPage.isBunsTabActive());
+
         step("Нажать на таб 'Начинки'");
         constructorPage.goToFillings();
+        assertTrue(constructorPage.isFillingsTabActive());
 
         step("Нажать на таб 'Соусы'");
         constructorPage.goToSauces();
 
-        step("Проверить, что заголовок 'Соусы' отображается");
+        step("Проверить, что таб 'Соусы' активен и заголовок 'Соусы' виден");
+        assertTrue(constructorPage.isSaucesTabActive());
         assertTrue(constructorPage.isSaucesTitleDisplayed());
-
     }
 
     @ParameterizedTest
@@ -59,13 +64,14 @@ public class ConstructorTest {
     @DisplayName("Проверка перехода к разделу 'Начинки'")
     @Description("Переход по клику на таб 'Начинки'")
     public void goToFillingsSectionTest(String browserName) {
-        step("Проверить, что заголовок 'Булки' отображается по умолчанию");
-        assertTrue(constructorPage.isBunsTitleDisplayed());
+        step("По умолчанию активен таб 'Булки'");
+        assertTrue(constructorPage.isBunsTabActive());
 
         step("Нажать на таб 'Начинки'");
         constructorPage.goToFillings();
 
-        step("Проверить, что заголовок 'Начинки' отображается");
+        step("Проверить, что таб 'Начинки' активен и заголовок 'Начинки' виден");
+        assertTrue(constructorPage.isFillingsTabActive());
         assertTrue(constructorPage.isFillingsTitleDisplayed());
     }
 
@@ -76,11 +82,13 @@ public class ConstructorTest {
     public void goToBunsSectionTest(String browserName) {
         step("Нажать на таб 'Начинки' для перехода на другой раздел");
         constructorPage.goToFillings();
+        assertTrue(constructorPage.isFillingsTabActive());
 
         step("Нажать на таб 'Булки'");
         constructorPage.goToBuns();
 
-        step("Проверить, что заголовок 'Булки' отображается");
+        step("Проверить, что таб 'Булки' активен и заголовок 'Булки' виден");
+        assertTrue(constructorPage.isBunsTabActive());
         assertTrue(constructorPage.isBunsTitleDisplayed());
     }
 }
